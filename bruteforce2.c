@@ -3,11 +3,11 @@
 #include <string.h>
 #include <unistd.h>
 
-/*const char *alphabet = "abcdefghijklmnopqrstuvwxyz"
+const char *alphabet = "abcdefghijklmnopqrstuvwxyz"
 		       			"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-		       			"0123456789";*/
+		       			"0123456789";
 
-const char *alphabet = "abc";
+//const char *alphabet = "abc";
 
 static void generate(int maxlen);
 
@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
     }
 
     generate(atoi(argv[1]));
+
     return 0;
 }
 
@@ -112,8 +113,6 @@ static void generate(int maxlen)
 		    // Handle wraparound.
 		    if (letters[i] >= alphaLen)
 				letters[i] = 0;
-
-			printf("oi:%i\n", letters[i] );
 
 		    // Set this letter in the proper places in the buffer.
 		    c = alphabet[letters[i]];
