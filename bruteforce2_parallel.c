@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <omp.h>
+#include <math.h>
 
 /*const char *alphabet = "abcdefghijklmnopqrstuvwxyz"
 		       			"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -71,15 +72,15 @@ static void generate(int maxlen)
 		    int let0 = 0;
 		    int let1 = 0;
 		    for (i=len-2;i<bufLen;i+=stride) {
-			buffer[i]   = alphabet[let0];
-			buffer[i+1] = alphabet[let1++];
-			buffer[i+2] = '\n';
-			if (let1 == alphaLen) {
-			    let1 = 0;
-			    let0++;
-			    if (let0 == alphaLen)
-				let0 = 0;
-			}
+				buffer[i]   = alphabet[let0];
+				buffer[i+1] = alphabet[let1++];
+				buffer[i+2] = '\n';
+				if (let1 == alphaLen) {
+				    let1 = 0;
+				    let0++;
+				    if (let0 == alphaLen)
+						let0 = 0;
+				}
 		    }
 		}
 
@@ -96,7 +97,14 @@ static void generate(int maxlen)
 
 		// Now on each iteration, increment the the third to last letter.
 		i = len-3;
-		do {
+		int k = 0;
+		//do{
+		int start = i;
+		float a = alphaLen-1;
+		float b = len-2;
+		printf("aaa: %f\n",a);
+		//#pragma omp for
+		for (k = (start+1) * len  + (pow(a, b)); k > 0; k--){
 		    char c;
 		    int  j;
 
@@ -109,13 +117,14 @@ static void generate(int maxlen)
 
 		    // Set this letter in the proper places in the buffer.
 		    c = alphabet[letters[i]];
-		    #pragma omp for
-		    for (j=i;j<bufLen;j+=stride)
+		    for (j=i; j<bufLen; j+=stride)
 				buffer[j] = c;
 
 		    if (letters[i] != 0) {
 				// No wraparound, so we finally finished incrementing.
 				// Write out this set.  Reset i back to third to last letter.
+				printf("*\n");
+				printf("%i\n", k);
 				write(STDOUT_FILENO, buffer, bufLen);
 				i = len - 3;
 				continue;
@@ -127,8 +136,9 @@ static void generate(int maxlen)
 		    // If we carried past last letter, we're done with this
 		    // whole length.
 		    if (i < 0)
-				break;
-		} while(1);
+				k = 0;
+		}
+		// while(1);
     }
 
     // Clean up.
