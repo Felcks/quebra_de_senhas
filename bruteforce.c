@@ -3,10 +3,10 @@
 #include <stdlib.h>
 #include <time.h>
 
-static const char alphabet[] = 
+/*static const char alphabet[] = 
 	"abcdefghijklmnopqrstuvwxyz"
 	"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	"0123456789";
+	"0123456789";*/
 
 unsigned long generated_passwords = 0;
 static const int alphabet_size = sizeof(alphabet) - 1;

@@ -3,11 +3,11 @@
 #include <string.h>
 #include <unistd.h>
 
-const char *alphabet = "abcdefghijklmnopqrstuvwxyz"
+/*const char *alphabet = "abcdefghijklmnopqrstuvwxyz"
 		       			"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-		       			"0123456789";
+		       			"0123456789";*/
 
-//const char *alphabet = "abc";
+const char *alphabet = "abc";
 
 static void generate(int maxlen);
 
