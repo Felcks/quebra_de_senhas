@@ -36,20 +36,15 @@ static void generate(int maxlen)
 		exit(1);
     }
 
-    // This for loop generates all 1 letter patterns, then 2 letters, etc,
-    // up to the given maxlen.
-
     omp_set_num_threads(4);
     for (len=1; len <= maxlen; len++) { 
-    	//GERA os de uma letra de duas e de três
-		// The stride is one larger than len because each line has a '\n'.
+   
 		int i;
 		int stride = len+1;
 		int bufLen = stride * alphaLen * alphaLen;
 
 		if (len == 1) {
-		    // Special case.  The main algorithm hardcodes the last two
-		    // letters, so this case needs to be handled separately.
+		  
 		    int j = 0;
 		    bufLen = (len + 1) * alphaLen;
 		    
@@ -57,6 +52,7 @@ static void generate(int maxlen)
 				buffer[j++] = alphabet[i];
 				buffer[j++] = '\n';
 		    }
+
 		    //printf("%i ", omp_get_thread_num());
 		    write(STDOUT_FILENO, buffer, bufLen);
 		    continue;
@@ -102,39 +98,38 @@ static void generate(int maxlen)
 		int start = i;
 		float a = alphaLen-1;
 		float b = len-2;
-		printf("aaa: %f\n",a);
-		//#pragma omp for
-		for (k = (start+1) * len  + (pow(a, b)); k > 0; k--){
+
+		printf("%i\n", (len-3) * alphaLen);
+
+		int extra = 0;
+		int y = len-3;
+		while(y > 0){
+			extra += pow(alphaLen, y)-1;
+			y -= 1;
+		}
+		int c = (pow(alphaLen, len-2)-1) + extra;
+		printf("zzzzzzzz: %i\n", c);
+		#pragma omp for
+		for (k = c; k > 0; k--){
 		    char c;
 		    int  j;
 
-		    // Increment this letter.
 		    letters[i]++;
 
-		    // Handle wraparound.
 		    if (letters[i] >= alphaLen)
 				letters[i] = 0;
 
-		    // Set this letter in the proper places in the buffer.
 		    c = alphabet[letters[i]];
 		    for (j=i; j<bufLen; j+=stride)
 				buffer[j] = c;
 
 		    if (letters[i] != 0) {
-				// No wraparound, so we finally finished incrementing.
-				// Write out this set.  Reset i back to third to last letter.
-				printf("*\n");
-				printf("%i\n", k);
 				write(STDOUT_FILENO, buffer, bufLen);
 				i = len - 3;
 				continue;
 		    }
 
-		    // The letter wrapped around ("carried").  Set up to increment
-		    // the next letter on the left.
 		    i--;
-		    // If we carried past last letter, we're done with this
-		    // whole length.
 		    if (i < 0)
 				k = 0;
 		}
